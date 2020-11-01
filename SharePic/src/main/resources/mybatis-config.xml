@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+	<environments default="sharepic">
+		<environment id="sharepic">
+			<transactionManager type="JDBC" />
+			<dataSource type="POOLED">
+				<property name="driver" value="org.postgresql.Driver" />
+				<property name="url" value="jdbc:postgresql://localhost:5432/sharepic" />
+				<property name="username" value="sharepic_user" />
+				<property name="password" value="sharepic_user" />
+			</dataSource>
+		</environment>
+	</environments>
+
+	<mappers>
+		<package name="com.sharepic.mapper" />
+	</mappers>
+
+</configuration>

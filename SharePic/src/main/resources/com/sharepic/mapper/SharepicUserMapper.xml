@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sharepic.mapper.SharepicUserMapper">
+
+	<insert id="insert" parameterType="com.sharepic.user.User">
+		insert into sharepic_schema.sharepic_user values(
+		'userIdxxx' || nextval('sharepic_schema.user_id_sequence'),
+		#{meta.username, jdbcType=VARCHAR},
+		#{meta.password, jdbcType=VARCHAR},
+		#{meta.insertTime, jdbcType=TIMESTAMP},
+		#{meta.updateTime, jdbcType=TIMESTAMP}
+		);
+	</insert>
+
+	<select id="count" resultType="int">
+		select count(*)
+		  from sharepic_schema.sharepic_user
+		 where sharepic_user.　user_name = #{cond.username, jdbcType=VARCHAR}
+	 	   and sharepic_user.　password = #{cond.password, jdbcType=VARCHAR}
+	</select>
+
+</mapper>
