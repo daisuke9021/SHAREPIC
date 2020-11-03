@@ -10,10 +10,16 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
+import com.datastax.driver.core.Cluster;
+import com.datastax.driver.core.Session;
+
 public class DBCommonUtils {
 
-	 //コネクション
-	private static SqlSession sqlSession = null;
+	//RDB(PostgreSQL)とのコネクション
+	private static SqlSession postgresqlSession = null;
+	//NoSQL(Cassandra)とのコネクション
+	private static Cluster cassandraCluster = null;
+	private static Session cassandraSession = null;
 
 	/**
 	 * PostgreSQLとのコネクションを確立します。
@@ -26,11 +32,34 @@ public class DBCommonUtils {
 		try {
 			String configFilePath = Paths.get("src","main","resources").toRealPath(LinkOption.NOFOLLOW_LINKS).toString()
 					+  File.separator
-					+ PropertyUtils.getProperties().getString("mybatis_config_filepath");
+					+ PropertyUtils.getProperties("application").getString("mybatis_config_filepath");
 			InputStream input = new FileInputStream(configFilePath);
 			SqlSessionFactoryBuilder builder = new SqlSessionFactoryBuilder();
 			SqlSessionFactory factory = builder.build(input);
-			sqlSession = factory.openSession();
+			postgresqlSession = factory.openSession();
+		} catch (Exception e) {
+			e.printStackTrace();
+			result = false;
+		}
+
+		return result;
+	}
+
+	/**
+	 * Cassandraとのコネクションを確立します。
+	 * @return 確立結果｜成功：true｜失敗：false
+	 */
+	public static boolean openCassandraConnection() {
+
+		boolean result = true;
+
+		try {
+			String HOST = PropertyUtils.getProperties("application").getString("cassandra_host");
+			Integer PORT = Integer.valueOf(PropertyUtils.getProperties("application").getString("cassandra_port"));
+			System.out.println("Connecting to 【" + HOST + ":" + PORT + "】");
+			cassandraCluster = cassandraCluster.builder().addContactPoint(HOST).withPort(PORT).withoutJMXReporting().build();
+			cassandraSession = cassandraCluster.connect();
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			result = false;
@@ -48,7 +77,26 @@ public class DBCommonUtils {
 		boolean result = true;
 
 		try {
-			sqlSession.close();
+			postgresqlSession.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			result = false;
+		}
+
+		return result;
+	}
+
+	/**
+	 * Cassandraとのコネクションを切断します。
+	 * @return 切断結果｜成功：true｜失敗：false
+	 */
+	public static boolean closeCassandraConnection() {
+
+		boolean result = true;
+
+		try {
+			cassandraSession.close();
+			cassandraCluster.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 			result = false;
@@ -61,8 +109,16 @@ public class DBCommonUtils {
 	 * PostgreSQLとのコネクションを提供します。
 	 * @return sqlSession コネクション
 	 */
-	public static SqlSession getSqlSession() {
-		return sqlSession;
+	public static SqlSession getPostgresqlConnection() {
+		return postgresqlSession;
+	}
+
+	/**
+	 * Cassandraのクラスタとのコネクション(セッション)を提供します。
+	 * @return session コネクション
+	 */
+	public static Session getCassandraConnection() {
+		return cassandraSession;
 	}
 
 }

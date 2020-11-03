@@ -1,6 +1,5 @@
 package com.sharepic;
 
-import org.apache.ibatis.session.SqlSession;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -10,13 +9,9 @@ import com.sharepic.util.DBCommonUtils;
 
 @Configuration
 @ComponentScan("com.sharepic")
-public class SharepicConfiguration {
+public class TestAppConfig {
 
-	@Bean(name = "postgresqlConnection")
-	public SqlSession providePostgresqlConnection() {
-		return DBCommonUtils.getPostgresqlConnection();
-	}
-
+	//テスト時に@Autowiredクラスをここに書く必要があるってことか
 	@Bean(name = "cassandraConnection")
 	public Session provideCassandraConnection() {
 		return DBCommonUtils.getCassandraConnection();

@@ -38,8 +38,7 @@ public class UserDaoTest {
 	public void insertTest() throws Exception {
 
 		//@Mockで空っぽになってるsqlSessionを定義する必要がある
-		SqlSession session = DBCommonUtils.getSqlSession();
-		SharepicUserMapper mapper = session.getMapper(SharepicUserMapper.class);
+		SharepicUserMapper mapper = DBCommonUtils.getPostgresqlConnection().getMapper(SharepicUserMapper.class);
 		Mockito.when(mockSqlSession.getMapper(SharepicUserMapper.class)).thenReturn(mapper);
 
 		String username = "makito";
@@ -58,8 +57,7 @@ public class UserDaoTest {
 		User user = new User(username, password);
 
 		//@Mockで空っぽになってるsqlSessionを定義する必要がある
-		SqlSession session = DBCommonUtils.getSqlSession();
-		SharepicUserMapper mapper = session.getMapper(SharepicUserMapper.class);
+		SharepicUserMapper mapper = DBCommonUtils.getPostgresqlConnection().getMapper(SharepicUserMapper.class);
 		Mockito.when(mockSqlSession.getMapper(SharepicUserMapper.class)).thenReturn(mapper);
 
 		int result = dao.select(user);

@@ -23,7 +23,7 @@ public class UserDao {
 //	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
-	@Qualifier("SqlSession")
+	@Qualifier("postgresqlConnection")
 	private SqlSession sqlSession;
 
 	/**
@@ -50,7 +50,7 @@ public class UserDao {
 			result = mapper.insert(user);
 //			logger.debug("テーブル：SHAREPIC_USER｜処理種別：INSERT｜登録件数：" + result + "件");
 			System.out.println("テーブル：SHAREPIC_USER｜処理種別：INSERT｜登録件数：" + result + "件");
-
+			sqlSession.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
 			sqlSession.rollback();
