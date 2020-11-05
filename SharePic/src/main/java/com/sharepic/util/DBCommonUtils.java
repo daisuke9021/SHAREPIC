@@ -11,6 +11,7 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
 import com.datastax.driver.core.Cluster;
+import com.datastax.driver.core.PreparedStatement;
 import com.datastax.driver.core.Session;
 
 public class DBCommonUtils {
@@ -20,6 +21,8 @@ public class DBCommonUtils {
 	//NoSQL(Cassandra)とのコネクション
 	private static Cluster cassandraCluster = null;
 	private static Session cassandraSession = null;
+	//NoSQL(Cassandra)で利用するPreparedStatement
+	private static PreparedStatement insertPsmt = null;
 
 	/**
 	 * PostgreSQLとのコネクションを確立します。
@@ -59,6 +62,9 @@ public class DBCommonUtils {
 			System.out.println("Connecting to 【" + HOST + ":" + PORT + "】");
 			cassandraCluster = cassandraCluster.builder().addContactPoint(HOST).withPort(PORT).withoutJMXReporting().build();
 			cassandraSession = cassandraCluster.connect();
+			//PreparedStatementも用意する
+			String insertQuery = PropertyUtils.getProperties("cassandraSql").getString("insertPicture");
+			insertPsmt = cassandraSession.prepare(insertQuery);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -119,6 +125,14 @@ public class DBCommonUtils {
 	 */
 	public static Session getCassandraConnection() {
 		return cassandraSession;
+	}
+
+	/**
+	 * PICTURE_STORE登録用のPreparedStatementを提供します。
+	 * @return
+	 */
+	public static PreparedStatement getInsertPsmt() {
+		return insertPsmt;
 	}
 
 }

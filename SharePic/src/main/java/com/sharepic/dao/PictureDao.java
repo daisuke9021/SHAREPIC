@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import com.datastax.driver.core.BoundStatement;
+import com.datastax.driver.core.PreparedStatement;
 import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Session;
 import com.datastax.driver.mapping.Mapper;
@@ -19,6 +21,7 @@ import com.datastax.driver.mapping.MappingManager;
 import com.sharepic.mapper.SharepicTopicSequenceMapper;
 import com.sharepic.picture.Picture;
 import com.sharepic.service.PictureService;
+import com.sharepic.util.DBCommonUtils;
 
 /**
  * テーブル「PICTURE_STORE」に登録｜更新｜検索｜削除を行う。
@@ -72,12 +75,19 @@ public class PictureDao {
 		picture.setInsertTime(now.toString());
 		picture.setUpdateTime(now.toString());
 
-		//マッパー取得
-		Mapper<Picture> mapper = getCassandraMapper(Picture.class);
-
 		//実行
 		try {
-			mapper.save(picture);
+			PreparedStatement insertPsmt = DBCommonUtils.getInsertPsmt();
+			BoundStatement bound = insertPsmt.bind(
+									picture.getObjectUrl(),
+									picture.getPoster(),
+									picture.getTopic(),
+									picture.getTopicId(),
+									picture.getCaption(),
+									picture.getInsertTime(),
+									picture.getUpdateTime());
+			cassandraSession.execute(bound);
+
 //			logger.debug("テーブル：PICTURE_STORE｜処理種別：INSERT｜登録処理に成功しました。");
 			System.out.println("テーブル：PICTURE_STORE｜処理種別：INSERT｜登録処理に成功しました。");
 		} catch (Exception e) {
@@ -102,6 +112,7 @@ public class PictureDao {
 
 		//マッパー取得
 		Mapper<Picture> mapper = getCassandraMapper(Picture.class);
+
 
 		//実行
 		try {

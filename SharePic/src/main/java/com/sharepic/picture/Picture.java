@@ -33,6 +33,14 @@ public class Picture {
 	@Column(name="update_time")
 	private String updateTime;
 
+	public Picture() {}
+	public Picture(String objectUrl, String poster, String topic, String caption) {
+		this.objectUrl = objectUrl;
+		this.poster = poster;
+		this.topic = topic;
+		this.caption = caption;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();

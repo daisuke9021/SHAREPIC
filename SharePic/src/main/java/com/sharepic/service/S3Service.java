@@ -47,6 +47,7 @@ public class S3Service {
 			//アップロード
 			s3Client.putObject(putRequest);
 			uploadResult = true;
+			System.out.println("S3アップロード処理完了；" + objectUrl);
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("S3アップロード処理に失敗しました。");
