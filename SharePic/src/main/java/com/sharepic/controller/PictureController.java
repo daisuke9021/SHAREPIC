@@ -23,7 +23,7 @@ import com.sharepic.service.S3Service;
 import com.sharepic.util.PropertyUtils;
 
 @Controller
-@RequestMapping("/Pictures")
+@RequestMapping("/Sharepic/Pictures")
 public class PictureController {
 
 	@Autowired

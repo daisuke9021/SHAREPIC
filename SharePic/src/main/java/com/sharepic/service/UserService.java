@@ -1,6 +1,7 @@
 package com.sharepic.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.sharepic.dao.UserDao;
 import com.sharepic.user.User;
@@ -10,6 +11,7 @@ import com.sharepic.user.User;
  * @author daisuke
  *
  */
+@Component
 public class UserService {
 
 	@Autowired
