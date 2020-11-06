@@ -33,6 +33,11 @@ public class PictureController {
 	@Autowired
 	S3Service s3Service;
 
+	@RequestMapping("/home")
+	public String home(Model model) {
+		return "home";
+	}
+
 	@RequestMapping("/Get")
 	public String getPictures(Model model) {
 

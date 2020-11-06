@@ -19,7 +19,9 @@
 		select count(*)
 		  from sharepic_schema.sharepic_user
 		 where sharepic_user.　user_name = #{cond.username, jdbcType=VARCHAR}
+		 <if test="cond.password != null">
 	 	   and sharepic_user.　password = #{cond.password, jdbcType=VARCHAR}
+	 	  </if>
 	</select>
 
 </mapper>

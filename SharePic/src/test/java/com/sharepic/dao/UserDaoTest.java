@@ -52,8 +52,8 @@ public class UserDaoTest {
 
 	@Test
 	public void searchTest() {
-		String username = "daisuke takakuwa";
-		String password = "xders1209";
+		String username = "crsc1209";
+		String password = null;
 		User user = new User(username, password);
 
 		//@Mockで空っぽになってるsqlSessionを定義する必要がある
