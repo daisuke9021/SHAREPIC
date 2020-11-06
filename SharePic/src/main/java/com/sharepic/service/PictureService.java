@@ -2,8 +2,10 @@ package com.sharepic.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -40,11 +42,30 @@ public class PictureService {
 	 * @return pictureMap
 	 * @throws Exception
 	 */
-	public List<Picture> getHomePictures() throws Exception {
-		//30個分のデータ取得
-		List<Picture> allPictureList = selectByCondition("select30","");
+	public Map<String,List<Picture>> getHomePictures() throws Exception {
+		//全データ取得
+		List<Picture> allPictureList = selectByCondition("selectAll","");
+		//3つのトピック選定
+		Set<String> topicSet = new LinkedHashSet<>();
+		for (Map.Entry<String,String> entry : getTopicList().entrySet()) {
+			topicSet.add(entry.getValue());
+			if(topicSet.size() == 3) {
+				break;
+			}
+		}
+		//トピックに紐つく写真取得
+		Map<String,List<Picture>> pictureMap = new HashMap<>();
+		for(String topic : topicSet) {
+			List<Picture> pictureListByTopic = new ArrayList<>();
+			for(Picture picture : allPictureList) {
+				if(topic.equals(picture.getTopic())) {
+					pictureListByTopic.add(picture);
+				}
+			}
+			pictureMap.put(topic, pictureListByTopic);
+		}
 
-		return allPictureList;
+		return pictureMap;
 	}
 
 	/**

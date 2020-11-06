@@ -4,9 +4,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -35,34 +37,40 @@ public class PictureController {
 
 	@RequestMapping("/home")
 	public String home(Model model) {
-		return "home";
-	}
-
-	@RequestMapping("/Get")
-	public String getPictures(Model model) {
-
-		List<Picture> pictureList = new ArrayList<>();
+		Map<String,List<Picture>> pictureMap = new HashMap<>();
+		Collection<String> topicList = null;
 
 		try {
-			pictureList = pictureService.getHomePictures();
+			pictureMap = pictureService.getHomePictures();
+			topicList = pictureService.getTopicList().values();
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("写真が取得できませんでした");
 		}
 
-		model.addAttribute("pictureList", pictureList);
+		for(Map.Entry<String,List<Picture>> entry : pictureMap.entrySet()) {
+			System.out.println("トピック名：" + entry.getKey());
+			for(Picture picture : entry.getValue()) {
+				System.out.println(picture);
+			}
+ 		}
 
-		for(Picture picture : pictureList) {
-			System.out.println(picture);
+		for(String topic : topicList) {
+			System.out.println("トピック名：" + topic);
 		}
 
-		return "index.html";
+		model.addAttribute("pictureList", pictureMap);
+
+		return "home";
 	}
 
 	@PostMapping("/Upload")
 	public String uploadPicture(Model model,
 								@RequestParam("picture") MultipartFile multipartFile,
-								@RequestParam("fileType") String fileType
+								@RequestParam("fileType") String fileType,
+								@RequestParam("poster") String poster,
+								@RequestParam("topic") String topic,
+								@RequestParam("caption") String caption
 								) throws Exception {
 
 		//ファイルが空の場合、投稿失敗ページへ遷移
@@ -71,9 +79,6 @@ public class PictureController {
 		}
 
 		//所定の場所にファイルを取り込む
-		String poster = "chihiro";
-		String topic = "food";
-		String caption = "この前はたのしかったなあ";
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddhhmmss");
 		String uploadTime = sdf.format(new Date());
 		String fileName = poster + "_" + topic + "_" + uploadTime + "." + fileType;

@@ -1,22 +1,23 @@
 package com.sharepic.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.sharepic.TestAppConfig;
+import com.sharepic.SharepicConfiguration;
 import com.sharepic.picture.Picture;
 import com.sharepic.util.DBCommonUtils;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = TestAppConfig.class)
-@ActiveProfiles("default")
+@ContextConfiguration(classes = SharepicConfiguration.class)
+//@ActiveProfiles("default")
 public class PictureServiceTest {
 
 	@Autowired
@@ -32,15 +33,18 @@ public class PictureServiceTest {
 		DBCommonUtils.closeCassandraConnection();
 	}
 
-//	@Test
-	public void getTrendTopicPicturesTest() throws Exception {
+	@Test
+	public void getHomePicturesTest() throws Exception {
 		//入力データなし
 		//実行
-		List<Picture> pictureList = service.getHomePictures();
+		Map<String,List<Picture>> pictureMap = service.getHomePictures();
 
-		for(Picture picture : pictureList) {
-			System.out.println(picture);
-		}
+		for(Map.Entry<String,List<Picture>> entry : pictureMap.entrySet()) {
+			System.out.println("トピック名：" + entry.getKey());
+			for(Picture picture : entry.getValue()) {
+				System.out.println(picture);
+			}
+ 		}
 	}
 
 	/**
