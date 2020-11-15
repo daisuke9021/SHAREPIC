@@ -12,8 +12,8 @@
         <form action="/Sharepic/Users/registerExec" method="post" onsubmit="return checkParam();">
             <p id="title">アカウントを登録しよう</p>
             <p>　</p>
-            <p>USERNAME：　　　　<input id="username" type="text" name="username" /></p>
-            <p>PASSWORD：　　　　<input id="password1" type="text" name="password1" /></p>
+            <p>USERNAME(英数字)：<input id="username" type="text" name="username" /></p>
+            <p>PASSWORD(英数字)：<input id="password1" type="text" name="password1" /></p>
             <p>PASSWORD(確認用)：<input id="password2" type="text" name="password2" /></p>
             <p>　</p>
             <p><button id="btn">REGISTER!!</button></p>
@@ -29,8 +29,14 @@
        if (document.getElementById("username").value.length < 8) {
         alert("ユーザ名は8文字以上入力してください。");
         return false;
+      } else if (!document.getElementById("username").value.match(/^[A-Za-z0-9]*$/)) {
+		alert("ユーザ名は英数字で入力してください。");
+        return false;
       } else if (document.getElementById("password1").value.length < 8) {
         alert("パスワードを8文字以上入力してください。");
+        return false;
+      } else if (!document.getElementById("password1").value.match(/^[A-Za-z0-9]*$/)) {
+      	alert("パスワードは英数字で入力してください。");
         return false;
       } else if (document.getElementById("password2").value.length < 1) {
         alert("パスワード(確認用)を入力してください。");
