@@ -14,49 +14,15 @@
     </p>
 
     <div id="centerArea">
-     <form name="userForm" action="http://localhost:8080/Sharepic/Users/login">
+     <form name="userForm" action="/Sharepic/Users/login">
         <p>USERNAME：<input type="text" name="username" placeholder="username"/></p>
         <p>PASSWORD：<input id="password" type="text" name="password" placeholder="password"/></p>
         <button type="submit" id="btn"><i class="fas fa-camera"></i></button>
       </form>
     </div>
 
-    <p id="centerArea"><a href="http://localhost:8080/Sharepic/Users/register">新規登録はこちら</a></p>
+    <p id="centerArea"><a href="/Sharepic/Users/register">新規登録はこちら</a></p>
 
   </body>
 
-<!--   <script type="text/javascript">
-
-    const btn = document.getElementById('btn');
-
-    btn.addEventListener('click',()=> {
-      submitData();
-      setTimeout(()=>document.userForm.submit(),500);
-    })
-
-    function submitData() {
-        //パスワードを白くする
-        document.getElementById("password").style.color = "white";
-        //パスワードをハッシュ化
-        digestPassword();
-    }
-
-
-    async function digestPassword() {
-
-        const data = new TextEncoder().encode(document.userForm.password.value);
-        //★後続処理に進まずに、そいつの処理が終わるのを待ちたい時は「await」をつけること。
-        const hash = await crypto.subtle.digest('SHA-256',data);
-        console.log("1" + hash);
-        const hashArray = Array.from(new Uint8Array(hash));
-        console.log("2" + hashArray);
-        const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-        console.log("3" + hashHex);
-        document.userForm.password.value = hashHex;
-        console.log(document.userForm.password.value);
-        return hashHex;
-    }
-
-  </script>
- -->
 </html>

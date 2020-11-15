@@ -20,10 +20,10 @@
     <div id="menuBox2">
       <div class="spacebox1">　</div>
       <div id="menuBox2_sub1">
-        <a href="http://localhost:8080/Sharepic/Pictures/Mypage">MYPAGE</a>
+        <a href="/Sharepic/Pictures/Mypage">MYPAGE</a>
       </div>
       <div id="menuBox2_sub2">
-        <a href="http://localhost:8080/Sharepic/Pictures/Upload">SHAREPIC</a>
+        <a href="/Sharepic/Pictures/Upload">SHAREPIC</a>
       </div>
       <div id="menuBox2_sub3">
         <a href="#">LOGOUT</a>
@@ -37,7 +37,7 @@
       <div id="box1">
         <p class="sectionTitle1">TOPIC LIST</p>
         <!--LOOP START-->
-        <form th:each="topicName : ${topicList}" method="post" action="http://localhost:8080/Sharepic/Pictures/Topic">
+        <form th:each="topicName : ${topicList}" method="post" action="/Sharepic/Pictures/Topic">
         	<p class="topicChooseList">
         		<input type="submit" value=" ">
         		<span th:text="${topicName}"></span>
@@ -54,7 +54,7 @@
           <div class="pictureMainBox">
             <p class="topicName">[[${pictureMap.key}]]</p>
             	<div class="pictureSubBox">
-            		<form th:each="picItem : ${pictureMap.value}" action="http://localhost:8080/Sharepic/Pictures/Picture" method="post">
+            		<form th:each="picItem : ${pictureMap.value}" action="/Sharepic/Pictures/Picture" method="post">
               			<input type="image" class="pictureItem" th:attr="src=@{${picItem.getObjectUrl()}}">
               			<!-- 隠しフィールド -->
       					<input type="hidden" name="topic" th:attr="value=@{${picItem.getTopic()}}">
