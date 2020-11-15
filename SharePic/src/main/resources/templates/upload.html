@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8">
+    <title>写真投稿ページ</title>
+    <link rel="stylesheet" href="https://xxsharepicxx.s3-ap-northeast-1.amazonaws.com/css/upload.css">
+    <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@300&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Goldman:wght@700&display=swap" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  </head>
+
+  <body>
+
+    <div id="menuBox1">
+      <i id="cameraBtn" class="fas fa-camera-retro"></i>SHAREPIC<i id="cameraBtn" class="fas fa-camera-retro"></i>
+    </div>
+
+    <div id="menuBox2">
+      <div class="spacebox1">　</div>
+      <div id="menuBox2_sub1">
+        <a href="http://localhost:8080/Sharepic/Pictures/Home">HOME</a>
+      </div>
+      <div id="menuBox2_sub2">
+        <a href="http://localhost:8080/Sharepic/Pictures/Mypage">MYPAGE</a>
+      </div>
+      <div id="menuBox2_sub3">
+        <a href="#">LOGOUT</a>
+      </div>
+      <div class="spacebox1"> </div>
+    </div>
+
+    <div id="main">
+
+      <p><img id="preview"></p>
+      <form name="uploadForm" id="uploadForm" action="http://localhost:8080/Sharepic/Pictures/UploadPicture" method="post" enctype="multipart/form-data">
+        <p>
+          <label>
+            <i class="far fa-image fa-5x"></i>
+            <input id="targetFile" type="file" name="picture">
+          </label>
+        </p>
+        <p id="topicForm">TOPIC：<label><input id="newTopicFlg" class="checkbox" type="checkbox" value="on" onclick="connecttext(this.checked);">新しいトピックを作る</label>
+        <input id="newTopic" type="text" name="newTopic" disabled>
+          　<br>OR　
+            <br>既存のトピックを使う
+          <select id="existedTopic" name="existedTopic">
+            <option value="" selected></option>
+            <option th:each="topic : ${topicList}" th:value="${topic}" th:text="${topic}"></option>
+          </select>
+        </p>
+        <br>
+        <p id="captionForm">CAPTION：<input id="caption" type="text" name="caption" ></p>
+        <br>
+        <p><button id="submitFormBtn" type="button"><i class="fas fa-paper-plane fa-5x"></i></button></p>
+
+        <input id="topic" type="hidden" name="topic" value="default">
+        <input id="fileType" type="hidden" name="fileType" value="default">
+      </form>
+
+    </div>
+  </body>
+
+  <script>
+
+    const submitFormBtn = document.getElementById("submitFormBtn");
+    submitFormBtn.addEventListener("click", function(event){
+      event.preventDefault();
+      //隠しフィールド「ファイル拡張子」を更新してから送信する
+      const fileName = document.getElementById("targetFile").value;
+      const index = fileName.lastIndexOf(".");
+      const fileExtension = fileName.substring(index+1);
+      document.getElementById("fileType").value = fileExtension;
+      //「新しいトピックを作る」にチェックが入っている場合、新しいトピックを送信する
+      if(document.getElementById("newTopicFlg").checked) {
+        document.getElementById("topic").value = document.getElementById("newTopic").value;
+      } else {
+        document.getElementById("topic").value = document.getElementById("existedTopic").value;
+      }
+
+      //送信値チェック
+      if(document.getElementById("targetFile").value.length < 1) {
+        alert("投稿する写真を選択してください。");
+        return false;
+      } else if (document.getElementById("topic").value.length < 1) {
+        alert("トピックを選択してください。");
+        return false;
+      } else if (document.getElementById("caption").value.length < 1) {
+        alert("キャプションを記入してください。");
+        return false;
+      } else {
+        document.uploadForm.submit();
+      }
+
+    })
+
+
+    $('#targetFile').on('change', function (e) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        $("#preview").attr('src', e.target.result);
+      }
+      reader.readAsDataURL(e.target.files[0]);
+    });
+
+    function connecttext(ischecked ) {
+      if( ischecked == true ) {
+        // チェックが入っていたら新しいトピックの入力欄を有効化
+        document.getElementById("newTopic").disabled = false;
+        // チェックが入っていたら既存のトピックの入力値を無効化
+        document.getElementById("existedTopic").disabled = true;
+
+      } else {
+        // チェックが入っていなかったら新しいトピックの入力欄を無効化
+        document.getElementById("newTopic").disabled = true;
+        // チェックが入っていたら既存のトピックの入力値を有効化
+        document.getElementById("existedTopic").disabled = false;
+      }
+    }
+
+  </script>
+
+</html>

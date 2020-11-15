@@ -1,10 +1,76 @@
 <!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>ホーム画面</title>
-</head>
-<body>
-	<p>ホーム</p>
-</body>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8">
+    <title>トップページ</title>
+    <link rel="stylesheet" href="https://xxsharepicxx.s3-ap-northeast-1.amazonaws.com/css/home.css">
+    <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@300&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Goldman:wght@700&display=swap" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  </head>
+
+  <body>
+
+    <div id="menuBox1">
+      <i id="cameraBtn" class="fas fa-camera-retro"></i>SHAREPIC<i id="cameraBtn" class="fas fa-camera-retro"></i>
+    </div>
+
+    <div id="menuBox2">
+      <div class="spacebox1">　</div>
+      <div id="menuBox2_sub1">
+        <a href="http://localhost:8080/Sharepic/Pictures/Mypage">MYPAGE</a>
+      </div>
+      <div id="menuBox2_sub2">
+        <a href="http://localhost:8080/Sharepic/Pictures/Upload">SHAREPIC</a>
+      </div>
+      <div id="menuBox2_sub3">
+        <a href="#">LOGOUT</a>
+      </div>
+      <div class="spacebox1"> </div>
+    </div>
+
+    <div id="main">
+
+      <div class="spacebox2">　</div>
+      <div id="box1">
+        <p class="sectionTitle1">TOPIC LIST</p>
+        <!--LOOP START-->
+        <form th:each="topicName : ${topicList}" method="post" action="http://localhost:8080/Sharepic/Pictures/Topic">
+        	<p class="topicChooseList">
+        		<input type="submit" value=" ">
+        		<span th:text="${topicName}"></span>
+        	</p>
+			<input type="hidden" name="topic" th:attr="value=@{${topicName}}">
+        </form>
+        <!--LOOP END-->
+      </div>
+      <div id="box2">
+        <p class="sectionTitle2">PICKUP PICTURES</p>
+        <!--LOOP START-->
+        <div th:each="pictureMap : ${pictureList}" class="pictureFrame">
+          <div class="spacebox3">　</div>
+          <div class="pictureMainBox">
+            <p class="topicName">[[${pictureMap.key}]]</p>
+            	<div class="pictureSubBox">
+            		<form th:each="picItem : ${pictureMap.value}" action="http://localhost:8080/Sharepic/Pictures/Picture" method="post">
+              			<input type="image" class="pictureItem" th:attr="src=@{${picItem.getObjectUrl()}}">
+              			<!-- 隠しフィールド -->
+      					<input type="hidden" name="topic" th:attr="value=@{${picItem.getTopic()}}">
+      					<input type="hidden" name="caption" th:attr="value=@{${picItem.getCaption()}}">
+      					<input type="hidden" name="objectUrl" th:attr="value=@{${picItem.getObjectUrl()}}">
+      					<input type="hidden" name="poster" th:attr="value=@{${picItem.getPoster()}}">
+					</form>
+              	</div>
+          </div>
+          <div class="spacebox4">　</div>
+        </div>
+        <!--LOOP END-->
+      </div>
+      <div class="spacebox2">　</div>
+
+    </div>
+  </body>
+
 </html>

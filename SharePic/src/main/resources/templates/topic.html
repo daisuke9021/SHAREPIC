@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8">
+    <title>トピックページ</title>
+    <link rel="stylesheet" href="https://xxsharepicxx.s3-ap-northeast-1.amazonaws.com/css/topic.css">
+    <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@300&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Goldman:wght@700&display=swap" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  </head>
+
+  <body>
+
+    <div id="menuBox1">
+      <i id="cameraBtn" class="fas fa-camera-retro"></i>SHAREPIC<i id="cameraBtn" class="fas fa-camera-retro"></i>
+    </div>
+
+    <div id="menuBox2">
+      <div class="spacebox1">　</div>
+      <div id="menuBox2_sub1">
+        <a href="http://localhost:8080/Sharepic/Pictures/Home">HOME</a>
+      </div>
+      <div id="menuBox2_sub2">
+        <a href="http://localhost:8080/Sharepic/Pictures/Upload">SHAREPIC</a>
+      </div>
+      <div id="menuBox2_sub3">
+        <a href="http://localhost:8080/Sharepic/Pictures/Mypage">MYPAGE</a>
+      </div>
+      <div id="menuBox2_sub4">
+        <a href="#">LOGOUT</a>
+      </div>
+      <div class="spacebox1"> </div>
+    </div>
+
+    <div id="main">
+      <p id="username">#<span th:text="${topic}"></span></p>
+      <p>
+        <i id="oneRow" class="fas fa-briefcase"></i>横1列
+        <i id="twoRow" class="fas fa-briefcase"></i>横2列
+        <i id="threeRow" class="fas fa-briefcase"></i>横3列
+      </p>
+      <div id="pictureFrame">
+      	<div th:each="picItem : ${pictureList}">
+      		<form action="http://localhost:8080/Sharepic/Pictures/Picture" method="post">
+      			<input type="image" class="pictureItem" th:attr="src=@{${picItem.getObjectUrl()}}">
+      			<!-- 隠しフィールド -->
+      			<input type="hidden" name="topic" th:attr="value=@{${picItem.getTopic()}}">
+      			<input type="hidden" name="caption" th:attr="value=@{${picItem.getCaption()}}">
+      			<input type="hidden" name="objectUrl" th:attr="value=@{${picItem.getObjectUrl()}}">
+      			<input type="hidden" name="poster" th:attr="value=@{${picItem.getPoster()}}">
+      		</form>
+      	</div>
+      </div>
+     </div>
+  </body>
+
+  <script>
+
+      const oneRow = document.getElementById('oneRow');
+      oneRow.addEventListener('click', function() {
+        $('input').css({'width':'900px','height':'600px'});
+      })
+
+      const twoRow = document.getElementById('twoRow');
+      twoRow.addEventListener('click', function() {
+        $('input').css({'width':'450px','height':'300px'});
+      })
+
+      const threeRow = document.getElementById('threeRow');
+      threeRow.addEventListener('click', function() {
+        $('input').css({'width':'300px','height':'200px'});
+      })
+
+  </script>
+
+</html>

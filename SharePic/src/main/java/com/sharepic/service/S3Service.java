@@ -36,7 +36,7 @@ public class S3Service {
 		}
 
 		try {
-			String bucketName = PropertyUtils.getProperties("application").getString("bucket_name");
+			String bucketName = PropertyUtils.getProperties("application").getString("full_bucket_name");
 			AmazonS3 s3Client = AmazonS3ClientBuilder.standard().withRegion(Regions.AP_NORTHEAST_1).build();
 			FileInputStream fis = new FileInputStream(targetFile);
 			ObjectMetadata metadata = new ObjectMetadata();

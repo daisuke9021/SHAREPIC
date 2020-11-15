@@ -32,9 +32,11 @@ public class PictureUploadFlow {
 
 		if(uploadResult) {
 			//S3のオブジェクトURLに変換する
-			String bucketName = PropertyUtils.getProperties("application").getString("bucket_name");
+			String bucketName1 = PropertyUtils.getProperties("application").getString("bucket_name1");
+			String bucketName2 = PropertyUtils.getProperties("application").getString("bucket_name2");
 			String fileName = new File(picture.getObjectUrl()).getName();
-			String objectUrl = "https://" + bucketName + ".s3-ap-northeast-1,amazonaws.com/" + fileName;
+			String objectUrl = "https://" + bucketName1 + ".s3-ap-northeast-1.amazonaws.com/" + bucketName2 + fileName;
+			System.out.println("S3オブジェクトURL：" + objectUrl);
 			picture.setObjectUrl(objectUrl);
 			//NoSQL(Cassandra)に登録する
 			try {
