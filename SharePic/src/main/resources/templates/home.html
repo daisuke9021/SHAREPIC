@@ -36,15 +36,17 @@
       <div class="spacebox2">　</div>
       <div id="box1">
         <p class="sectionTitle1">TOPIC LIST</p>
-        <!--LOOP START-->
-        <form th:each="topicName : ${topicList}" method="post" action="/Sharepic/Pictures/Topic">
-        	<p class="topicChooseList">
-        		<input type="submit" value=" ">
-        		<span th:text="${topicName}"></span>
-        	</p>
-			<input type="hidden" name="topic" th:attr="value=@{${topicName}}">
-        </form>
-        <!--LOOP END-->
+        <div id="topicListBox">
+       		<!--LOOP START-->
+        	<form th:each="topicName : ${topicList}" method="post" action="/Sharepic/Pictures/Topic">
+        		<p class="topicChooseList">
+        			<input type="submit" value=" ">
+        			<span th:text="${topicName}"></span>
+        		</p>
+				<input type="hidden" name="topic" th:attr="value=@{${topicName}}">
+        	</form>
+        	<!--LOOP END-->
+        </div>
       </div>
       <div id="box2">
         <p class="sectionTitle2">PICKUP PICTURES</p>
