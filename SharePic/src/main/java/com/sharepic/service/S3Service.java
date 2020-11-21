@@ -5,9 +5,11 @@ import java.io.FileInputStream;
 
 import org.springframework.stereotype.Component;
 
-import com.amazonaws.regions.Regions;
+import com.amazonaws.ClientConfiguration;
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
@@ -37,7 +39,7 @@ public class S3Service {
 
 		try {
 			String bucketName = PropertyUtils.getProperties("application").getString("full_bucket_name");
-			AmazonS3 s3Client = AmazonS3ClientBuilder.standard().withRegion(Regions.AP_NORTHEAST_1).build();
+			AmazonS3 s3Client = makeS3Clinet();
 			FileInputStream fis = new FileInputStream(targetFile);
 			ObjectMetadata metadata = new ObjectMetadata();
 			metadata.setContentLength(targetFile.length());
@@ -58,5 +60,16 @@ public class S3Service {
 		return uploadResult;
 	}
 
+	private AmazonS3Client makeS3Clinet() {
+		String accessKey = PropertyUtils.getProperties("application").getString("aws.accessKeyId");
+		String secretKey = PropertyUtils.getProperties("application").getString("aws.secretKey");
+		// 認証オブジェクトを作成
+	    AWSCredentials credentials = new BasicAWSCredentials(accessKey, secretKey);
+	    // ConfigurationでTimeout時間を30秒に設定
+	    ClientConfiguration clientConfiguration = new ClientConfiguration();
+	    clientConfiguration.setConnectionTimeout(30000);
+	    // AmazonS3Clientをインスタンス化
+	    return new AmazonS3Client(credentials, clientConfiguration);
+	}
 
 }

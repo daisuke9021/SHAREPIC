@@ -17,7 +17,9 @@
 	</environments>
 
 	<mappers>
-		<package name="com.sharepic.mapper" />
+		<mapper resource="com/sharepic/mapper/SharepicPictureStoreMapper.xml"/>
+		<mapper resource="com/sharepic/mapper/SharepicTopicSequenceMapper.xml"/>
+		<mapper resource="com/sharepic/mapper/SharepicUserMapper.xml"/>
 	</mappers>
 
 </configuration>
