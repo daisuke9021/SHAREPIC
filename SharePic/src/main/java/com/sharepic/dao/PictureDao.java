@@ -71,6 +71,7 @@ public class PictureDao {
 		if(result == 0) {
 			System.out.println("登録に失敗しています....");
 		} else {
+			postgresqlSession.commit();
 			System.out.println("登録に成功しました！");
 		}
 
