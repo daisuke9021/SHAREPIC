@@ -9,7 +9,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.unit.DataSize;
 
-import com.datastax.driver.core.Session;
 import com.sharepic.util.DBCommonUtils;
 
 @Configuration
@@ -21,10 +20,10 @@ public class SharepicConfiguration {
 		return DBCommonUtils.getPostgresqlConnection();
 	}
 
-	@Bean(name = "cassandraConnection")
-	public Session provideCassandraConnection() {
-		return DBCommonUtils.getCassandraConnection();
-	}
+//	@Bean(name = "cassandraConnection")
+//	public Session provideCassandraConnection() {
+//		return DBCommonUtils.getCassandraConnection();
+//	}
 
     @Bean
     public MultipartConfigElement multipartConfigElement() {

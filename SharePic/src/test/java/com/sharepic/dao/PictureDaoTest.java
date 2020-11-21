@@ -25,13 +25,11 @@ public class PictureDaoTest {
 
 	@Before
 	public void before() {
-		DBCommonUtils.openCassandraConnection();
 		DBCommonUtils.openSqlSession();
 	}
 
 	@After
 	public void after() {
-		DBCommonUtils.closeCassandraConnection();
 		DBCommonUtils.closeSqlSession();
 	}
 
@@ -42,27 +40,15 @@ public class PictureDaoTest {
 		insert2();
 		insert3();
 		insert4();
-
 	}
 
 //	@Test
 	public void searchTest() throws Exception {
 		//入力データ用意
-		String query = "SELECT * FROM sharepic_keyspace.picture_store";
-		List<Picture> dtoList = pictureDao.select(query);
+		List<Picture> dtoList = pictureDao.select(new Picture());
 		System.out.println(dtoList);
 
 	}
-
-//	@Test
-	public void getTopicSequence() throws Exception {
-		//５回シーケンス取得してみる
-		for (int i = 0; i < 5; i++) {
-			int sequence = pictureDao.getTopicSequence();
-			System.out.println(sequence);
-		}
-	}
-
 
 	private void insert1() throws Exception {
 		//入力データ用意

@@ -110,6 +110,13 @@
         	<artifactId>commons-fileupload</artifactId>
         	<version>1.4</version>
         </dependency>
+        <dependency>
+        	<groupId>software.aws.mcs</groupId>
+        	<artifactId>
+        		aws-sigv4-auth-cassandra-java-driver-plugin_3
+        	</artifactId>
+        	<version>3.0.3</version>
+        </dependency>
 	</dependencies>
 
 	<build>

@@ -5,23 +5,15 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import com.datastax.driver.core.BoundStatement;
-import com.datastax.driver.core.PreparedStatement;
-import com.datastax.driver.core.ResultSet;
-import com.datastax.driver.core.Session;
-import com.datastax.driver.mapping.Mapper;
-import com.datastax.driver.mapping.MappingManager;
-import com.sharepic.mapper.SharepicTopicSequenceMapper;
+import com.sharepic.mapper.SharepicPictureStoreMapper;
 import com.sharepic.picture.Picture;
 import com.sharepic.service.PictureService;
-import com.sharepic.util.DBCommonUtils;
 
 /**
  * テーブル「PICTURE_STORE」に登録｜更新｜検索｜削除を行う。
@@ -31,9 +23,9 @@ import com.sharepic.util.DBCommonUtils;
 @Component
 public class PictureDao {
 
-	@Autowired
-	@Qualifier("cassandraConnection")
-	Session cassandraSession;
+//	@Autowired
+//	@Qualifier("cassandraConnection")
+//	Session cassandraSession;
 
 	@Autowired
 	@Qualifier("postgresqlConnection")
@@ -50,49 +42,36 @@ public class PictureDao {
 //		logger.debug("↓↓↓↓↓↓↓【開始】テーブル：PICTURE_STORE｜処理種別：INSERT↓↓↓↓↓↓↓");
 		System.out.println("↓↓↓↓↓↓↓【開始】テーブル：PICTURE_STORE｜処理種別：INSERT↓↓↓↓↓↓↓");
 
-		//トピック一覧の取得
-		Map<String,String> topicMap = pictureService.getTopicList();
-		String topic_id = null;
-		//登録済のトピックかどうか判定
-		boolean isTopicRegistered = false;
-		for(Map.Entry<String,String> entry : topicMap.entrySet()) {
-			//登録済のトピックであればトピックIDを控える
-			if(entry.getValue().equals(picture.getTopic())) {
-				topic_id = entry.getKey();
-				//ここでトピックIDも控えちゃうのがベスト
-				isTopicRegistered = true;
-			}
-		}
-		//未登録のトピックの場合、新しく作成する
-		if(!isTopicRegistered) {
-			topic_id = "topicIdxxx" + getTopicSequence();
-		}
-		picture.setTopicId(topic_id);
+		//マッパー取得
+		SharepicPictureStoreMapper mapper = postgresqlSession.getMapper(SharepicPictureStoreMapper.class);
 
 		//登録日時・更新日時のデータ作成
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		Timestamp now = Timestamp.valueOf(sdf.format(new Date()));
-		picture.setInsertTime(now.toString());
-		picture.setUpdateTime(now.toString());
+		picture.setInsertDate(now.toString());
+		picture.setUpdateDate(now.toString());
+
+		System.out.println("ーーーーーーーーーーーーーーー");
+		System.out.println("登録データ：");
+		System.out.println(picture.toString());
+		System.out.println("ーーーーーーーーーーーーーーー");
+		int result = 0;
 
 		//実行
 		try {
-			PreparedStatement insertPsmt = DBCommonUtils.getInsertPsmt();
-			BoundStatement bound = insertPsmt.bind(
-									picture.getObjectUrl(),
-									picture.getPoster(),
-									picture.getTopic(),
-									picture.getTopicId(),
-									picture.getCaption(),
-									picture.getInsertTime(),
-									picture.getUpdateTime());
-			cassandraSession.execute(bound);
+			result = mapper.insert(picture);
 
 //			logger.debug("テーブル：PICTURE_STORE｜処理種別：INSERT｜登録処理に成功しました。");
 			System.out.println("テーブル：PICTURE_STORE｜処理種別：INSERT｜登録処理に成功しました。");
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("テーブル：PICTURE_STORE｜処理種別：INSERT｜登録処理に失敗しました。");
+		}
+
+		if(result == 0) {
+			System.out.println("登録に失敗しています....");
+		} else {
+			System.out.println("登録に成功しました！");
 		}
 
 //		logger.debug("【終了】テーブル：PICTURE_STORE｜処理種別：INSERT");
@@ -104,20 +83,25 @@ public class PictureDao {
 	/**
 	 * 検索処理
 	 */
-	public List<Picture> select(String query) throws Exception {
+	public List<Picture> select(Picture picture) throws Exception {
 
 //		logger.debug("↓↓↓↓↓↓↓【開始】テーブル：PICTURE_STORE｜処理種別：SEARCH↓↓↓↓↓↓↓");
 		System.out.println("↓↓↓↓↓↓↓【開始】テーブル：PICTURE_STORE｜処理種別：SEARCH↓↓↓↓↓↓↓");
-		List<Picture> pictureList = new ArrayList<>();
 
 		//マッパー取得
-		Mapper<Picture> mapper = getCassandraMapper(Picture.class);
+		SharepicPictureStoreMapper mapper = postgresqlSession.getMapper(SharepicPictureStoreMapper.class);
 
+		List<Picture> pictureList = new ArrayList<>();
 
 		//実行
 		try {
-			ResultSet results = cassandraSession.execute(query);
-			pictureList = mapper.map(results).all();
+			pictureList = mapper.select(picture);
+			System.out.println("ーーーーーーーーーーーーーーー");
+			System.out.println("検索結果");
+			for(Picture picItem : pictureList) {
+				System.out.println(picItem);
+			}
+			System.out.println("ーーーーーーーーーーーーーーー");
 			System.out.println("テーブル：PICTURE_STORE｜処理種別：SEARCH｜取得件数：" + pictureList.size() + "件");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -129,42 +113,62 @@ public class PictureDao {
 		return pictureList;
 	}
 
-	/**
-	 *  トピックIDに埋め込むトピックシーケンスの取得
-	 */
-	public int getTopicSequence() {
 
-//		logger.debug("【開始】テーブル：TOPIC_SEQUENCE｜処理種別：SELECT");
-		System.out.println("↓↓↓↓↓↓↓【開始】テーブル：TOPIC_SEQUENCE｜処理種別：SELECT↓↓↓↓↓↓↓");
+	/**
+	 * トピック一覧取得処理
+	 */
+	public List<String> getTopicList() throws Exception {
+
+//		logger.debug("↓↓↓↓↓↓↓【開始】テーブル：PICTURE_STORE｜処理種別：SEARCH↓↓↓↓↓↓↓");
+		System.out.println("↓↓↓↓↓↓↓【開始】テーブル：PICTURE_STORE｜処理種別：SEARCH↓↓↓↓↓↓↓");
 
 		//マッパー取得
-		SharepicTopicSequenceMapper mapper = postgresqlSession.getMapper(SharepicTopicSequenceMapper.class);
+		SharepicPictureStoreMapper mapper = postgresqlSession.getMapper(SharepicPictureStoreMapper.class);
 
-		//戻り値
-		int topicSequence = 0;
+		List<String> topicList = new ArrayList<>();
 
+		//実行
 		try {
-			topicSequence = mapper.getTopicSequence();
-			System.out.println("テーブル：TOPIC_SEQUENCE｜処理種別：SELECT｜シーケンス番号：" + topicSequence);
-			postgresqlSession.commit();
+			topicList = mapper.getTopicList();
+
+			System.out.println("テーブル：PICTURE_STORE｜処理種別：SEARCH｜取得件数：" + topicList.size() + "件");
 		} catch (Exception e) {
 			e.printStackTrace();
-			postgresqlSession.rollback();
-			System.out.println("テーブル：TOPIC_SEQUENCE｜処理種別：SELECT｜シーケンス取得処理に失敗しました。");
+			System.out.println("テーブル：PICTURE_STORE｜処理種別：SEARCH｜検索処理に失敗しました。");
 		}
 
-		System.out.println("↑↑↑↑↑↑↑【終了】テーブル：TOPIC_SEQUENCE｜処理種別：SELECT↑↑↑↑↑↑↑");
+		System.out.println("↑↑↑↑↑↑↑【終了】テーブル：PICTURE_STORE｜処理種別：SEARCH↑↑↑↑↑↑↑");
 
-		return topicSequence;
+		return topicList;
 	}
 
-	/**
-	 * マッパー取得
-	 */
-	public Mapper getCassandraMapper(Class clazz) throws Exception {
-		MappingManager manager = new MappingManager(cassandraSession);
-		Mapper mapper = manager.mapper(clazz);
-		return mapper;
-	}
+//	/**
+//	 *  トピックIDに埋め込むトピックシーケンスの取得
+//	 */
+//	public int getTopicSequence() {
+//
+////		logger.debug("【開始】テーブル：TOPIC_SEQUENCE｜処理種別：SELECT");
+//		System.out.println("↓↓↓↓↓↓↓【開始】テーブル：TOPIC_SEQUENCE｜処理種別：SELECT↓↓↓↓↓↓↓");
+//
+//		//マッパー取得
+//		SharepicTopicSequenceMapper mapper = postgresqlSession.getMapper(SharepicTopicSequenceMapper.class);
+//
+//		//戻り値
+//		int topicSequence = 0;
+//
+//		try {
+//			topicSequence = mapper.getTopicSequence();
+//			System.out.println("テーブル：TOPIC_SEQUENCE｜処理種別：SELECT｜シーケンス番号：" + topicSequence);
+//			postgresqlSession.commit();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			postgresqlSession.rollback();
+//			System.out.println("テーブル：TOPIC_SEQUENCE｜処理種別：SELECT｜シーケンス取得処理に失敗しました。");
+//		}
+//
+//		System.out.println("↑↑↑↑↑↑↑【終了】テーブル：TOPIC_SEQUENCE｜処理種別：SELECT↑↑↑↑↑↑↑");
+//
+//		return topicSequence;
+//	}
 
 }

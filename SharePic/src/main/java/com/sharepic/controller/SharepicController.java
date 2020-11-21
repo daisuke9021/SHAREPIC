@@ -5,7 +5,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -19,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.sharepic.dao.PictureDao;
 import com.sharepic.flow.PictureUploadFlow;
 import com.sharepic.picture.Picture;
 import com.sharepic.repository.UserForSession;
@@ -41,6 +41,8 @@ public class SharepicController {
 	S3Service s3Service;
 	@Autowired
 	UserForSession session;
+	@Autowired
+	PictureDao pictureDao;
 
 	@RequestMapping("/Pictures/Home")
 	public String home(Model model) {
@@ -51,11 +53,11 @@ public class SharepicController {
 		}
 
 		Map<String,List<Picture>> pictureMap = new HashMap<>();
-		Collection<String> topicList = null;
+		List <String> topicList = new ArrayList<>();
 
 		try {
 			pictureMap = pictureService.getHomePictures();
-			topicList = pictureService.getTopicList().values();
+			topicList = pictureDao.getTopicList();
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("写真が取得できませんでした");
@@ -68,9 +70,6 @@ public class SharepicController {
 			}
  		}
 
-		for(String topic : topicList) {
-			System.out.println(topic);
-		}
 
 		model.addAttribute("topicList", topicList);
 		model.addAttribute("pictureList", pictureMap);
@@ -157,10 +156,10 @@ public class SharepicController {
 		}
 
 		//トピックリストを取得する
-		Collection<String> topicList = null;
+		List<String> topicList = new ArrayList<>();
 
 		try {
-			topicList = pictureService.getTopicList().values();
+			topicList = pictureDao.getTopicList();
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("写真が取得できませんでした");
@@ -215,11 +214,11 @@ public class SharepicController {
 		//セッションが残っている場合
 		if(session.getUserName() != null) {
 			Map<String,List<Picture>> pictureMap = new HashMap<>();
-			Collection<String> topicList = null;
+			List<String> topicList = new ArrayList<>();
 
 			try {
 				pictureMap = pictureService.getHomePictures();
-				topicList = pictureService.getTopicList().values();
+				topicList = pictureDao.getTopicList();
 			} catch (Exception e) {
 				e.printStackTrace();
 				System.out.println("写真が取得できませんでした");

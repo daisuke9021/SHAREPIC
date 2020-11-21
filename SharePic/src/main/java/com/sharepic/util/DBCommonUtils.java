@@ -10,19 +10,15 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
-import com.datastax.driver.core.Cluster;
-import com.datastax.driver.core.PreparedStatement;
-import com.datastax.driver.core.Session;
-
 public class DBCommonUtils {
 
 	//RDB(PostgreSQL)とのコネクション
 	private static SqlSession postgresqlSession = null;
-	//NoSQL(Cassandra)とのコネクション
-	private static Cluster cassandraCluster = null;
-	private static Session cassandraSession = null;
-	//NoSQL(Cassandra)で利用するPreparedStatement
-	private static PreparedStatement insertPsmt = null;
+//	//NoSQL(Cassandra)とのコネクション
+//	private static Cluster cassandraCluster = null;
+//	private static Session cassandraSession = null;
+//	//NoSQL(Cassandra)で利用するPreparedStatement
+//	private static PreparedStatement insertPsmt = null;
 
 	/**
 	 * PostgreSQLとのコネクションを確立します。
@@ -48,31 +44,38 @@ public class DBCommonUtils {
 		return result;
 	}
 
-	/**
-	 * Cassandraとのコネクションを確立します。
-	 * @return 確立結果｜成功：true｜失敗：false
-	 */
-	public static boolean openCassandraConnection() {
-
-		boolean result = true;
-
-		try {
-			String HOST = PropertyUtils.getProperties("application").getString("cassandra_host");
-			Integer PORT = Integer.valueOf(PropertyUtils.getProperties("application").getString("cassandra_port"));
-			System.out.println("Connecting to 【" + HOST + ":" + PORT + "】");
-			cassandraCluster = cassandraCluster.builder().addContactPoint(HOST).withPort(PORT).withoutJMXReporting().build();
-			cassandraSession = cassandraCluster.connect();
-			//PreparedStatementも用意する
-			String insertQuery = PropertyUtils.getProperties("cassandraSql").getString("insertPicture");
-			insertPsmt = cassandraSession.prepare(insertQuery);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			result = false;
-		}
-
-		return result;
-	}
+//	/**
+//	 * Cassandraとのコネクションを確立します。
+//	 * @return 確立結果｜成功：true｜失敗：false
+//	 */
+//	public static boolean openCassandraConnection() {
+//
+//		boolean result = true;
+//
+//		try {
+//			String HOST = PropertyUtils.getProperties("application").getString("cassandra_host");
+//			Integer PORT = Integer.valueOf(PropertyUtils.getProperties("application").getString("cassandra_port"));
+//			System.out.println("Connecting to 【" + HOST + ":" + PORT + "】");
+//
+//			cassandraCluster = cassandraCluster.builder()
+//												.addContactPoint(HOST)
+//												.withPort(PORT)
+//												.withAuthProvider(new SigV4AuthProvider("us-east-2"))
+//												.withSSL()
+//												.withoutJMXReporting()
+//												.build();
+//			cassandraSession = cassandraCluster.connect();
+//			//PreparedStatementも用意する
+//			String insertQuery = PropertyUtils.getProperties("cassandraSql").getString("insertPicture");
+//			insertPsmt = cassandraSession.prepare(insertQuery);
+//
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			result = false;
+//		}
+//
+//		return result;
+//	}
 
 	/**
 	 * PostgreSQLとのコネクションを切断します。
@@ -92,24 +95,24 @@ public class DBCommonUtils {
 		return result;
 	}
 
-	/**
-	 * Cassandraとのコネクションを切断します。
-	 * @return 切断結果｜成功：true｜失敗：false
-	 */
-	public static boolean closeCassandraConnection() {
-
-		boolean result = true;
-
-		try {
-			cassandraSession.close();
-			cassandraCluster.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-			result = false;
-		}
-
-		return result;
-	}
+//	/**
+//	 * Cassandraとのコネクションを切断します。
+//	 * @return 切断結果｜成功：true｜失敗：false
+//	 */
+//	public static boolean closeCassandraConnection() {
+//
+//		boolean result = true;
+//
+//		try {
+//			cassandraSession.close();
+//			cassandraCluster.close();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			result = false;
+//		}
+//
+//		return result;
+//	}
 
 	/**
 	 * PostgreSQLとのコネクションを提供します。
@@ -119,20 +122,20 @@ public class DBCommonUtils {
 		return postgresqlSession;
 	}
 
-	/**
-	 * Cassandraのクラスタとのコネクション(セッション)を提供します。
-	 * @return session コネクション
-	 */
-	public static Session getCassandraConnection() {
-		return cassandraSession;
-	}
-
-	/**
-	 * PICTURE_STORE登録用のPreparedStatementを提供します。
-	 * @return
-	 */
-	public static PreparedStatement getInsertPsmt() {
-		return insertPsmt;
-	}
+//	/**
+//	 * Cassandraのクラスタとのコネクション(セッション)を提供します。
+//	 * @return session コネクション
+//	 */
+//	public static Session getCassandraConnection() {
+//		return cassandraSession;
+//	}
+//
+//	/**
+//	 * PICTURE_STORE登録用のPreparedStatementを提供します。
+//	 * @return
+//	 */
+//	public static PreparedStatement getInsertPsmt() {
+//		return insertPsmt;
+//	}
 
 }

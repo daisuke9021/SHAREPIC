@@ -28,16 +28,16 @@ public class SharepicStartUp {
 			System.out.println("PostgreSQLとのコネクションの確立に失敗しました。");
 		}
 
-		System.out.println("Cassandraとのコネクションを確立します。");
-//		logger.debug("Cassandraとのコネクションを確立します。");
-		boolean openDbResult2 = DBCommonUtils.openCassandraConnection();
-		if(openDbResult2) {
-//			logger.debug("Cassandraとのコネクションの確立に成功しました。");
-			System.out.println("Cassandraとのコネクションの確立に成功しました。");
-		} else {
-//			logger.debug("Cassandraとのコネクションの確立に失敗しました。");
-			System.out.println("Cassandraとのコネクションの確立に失敗しました。");
-		}
+//		System.out.println("Cassandraとのコネクションを確立します。");
+////		logger.debug("Cassandraとのコネクションを確立します。");
+//		boolean openDbResult2 = DBCommonUtils.openCassandraConnection();
+//		if(openDbResult2) {
+////			logger.debug("Cassandraとのコネクションの確立に成功しました。");
+//			System.out.println("Cassandraとのコネクションの確立に成功しました。");
+//		} else {
+////			logger.debug("Cassandraとのコネクションの確立に失敗しました。");
+//			System.out.println("Cassandraとのコネクションの確立に失敗しました。");
+//		}
 
 	}
 
@@ -54,16 +54,16 @@ public class SharepicStartUp {
 			System.out.println("PostgreSQLとのコネクションの切断に失敗しました。");
 		}
 
-//		logger.debug("Cassandraとのコネクションを切断します。");
-		System.out.println("Cassandraとのコネクションを切断します。");
-		boolean closeDbResult2 = DBCommonUtils.closeCassandraConnection();
-		if(closeDbResult2) {
-//			logger.debug("Cassandraとのコネクションの切断に成功しました。");
-			System.out.println("Cassandraとのコネクションの切断に成功しました。");
-		} else {
-//			logger.debug("Cassandraとのコネクションの切断に失敗しました。");
-			System.out.println("Cassandraとのコネクションの切断に失敗しました。");
-		}
+////		logger.debug("Cassandraとのコネクションを切断します。");
+//		System.out.println("Cassandraとのコネクションを切断します。");
+//		boolean closeDbResult2 = DBCommonUtils.closeCassandraConnection();
+//		if(closeDbResult2) {
+////			logger.debug("Cassandraとのコネクションの切断に成功しました。");
+//			System.out.println("Cassandraとのコネクションの切断に成功しました。");
+//		} else {
+////			logger.debug("Cassandraとのコネクションの切断に失敗しました。");
+//			System.out.println("Cassandraとのコネクションの切断に失敗しました。");
+//		}
 
 //		logger.debug("アプリケーションを終了します。");
 		System.out.println("アプリケーションを終了します。");
