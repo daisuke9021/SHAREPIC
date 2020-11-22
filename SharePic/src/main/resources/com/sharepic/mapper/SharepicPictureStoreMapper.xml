@@ -61,4 +61,9 @@
 		  order by picture_store.　updateDate DESC
 	</select>
 
+	<delete id="delete" parameterType="com.sharepic.picture.Picture">
+		delete from picture_store
+		      where picture_store.　objectUrl=#{cond.objectUrl, jdbcType=VARCHAR}
+	</delete>
+
 </mapper>

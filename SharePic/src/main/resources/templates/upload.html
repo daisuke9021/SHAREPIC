@@ -33,7 +33,11 @@
 
     <div id="main">
 
-      <p><img id="preview"></p>
+      <p style="color:red;"><img id="preview"><br>
+         =画像が選択されると上記に表示されます=<br>
+         =画像ファイルのサイズが大きいと表示されない場合がございます=
+      </p>
+
       <form name="uploadForm" id="uploadForm" action="/Sharepic/Pictures/UploadPicture" method="post" enctype="multipart/form-data">
         <p>
           <label>
@@ -44,16 +48,16 @@
         <p id="topicForm"><label><input id="newTopicFlg" class="checkbox" type="checkbox" value="on" onclick="connecttext(this.checked);">新しいテーマを作る</label>
         <input id="newTopic" type="text" name="newTopic" disabled>
           　<br>OR　
-            <br>テーマを選ぶ
+            <br>既存テーマをつかう
           <select id="existedTopic" name="existedTopic">
             <option value="" selected></option>
             <option th:each="topic : ${topicList}" th:value="${topic}" th:text="${topic}"></option>
           </select>
         </p>
         <br>
-        <p id="captionForm">説明：<input id="caption" type="text" name="caption" ></p>
+        <p id="captionForm">写真の説明：<input id="caption" type="text" name="caption" ></p>
         <br>
-        <p><button id="submitFormBtn" type="button"><i class="fas fa-paper-plane fa-5x"></i></button></p>
+        <p><button id="submitFormBtn" type="button"><i class="fas fa-paper-plane fa-2x"></i>投稿する！</button></p>
 
         <input id="topic" type="hidden" name="topic" value="default">
         <input id="fileType" type="hidden" name="fileType" value="default">

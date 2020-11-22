@@ -34,4 +34,11 @@ public interface SharepicPictureStoreMapper {
 	 */
 	List<String> getTopicList();
 
+	/**
+	 * 削除処理
+	 * @param cond
+	 * @return
+	 */
+	int delete(@Param("cond") Picture cond);
+
 }

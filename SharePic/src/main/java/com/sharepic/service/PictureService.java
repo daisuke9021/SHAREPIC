@@ -44,9 +44,14 @@ public class PictureService {
 	public Map<String,List<Picture>> getHomePictures() throws Exception {
 		//トピックリスト取得
 		List<String> topicList = getFilteredTopicList();
+
+		int count = 3;
+		if(topicList.size() < 3) {
+			count = topicList.size();
+		}
 		//トピックに紐つく写真取得
 		Map<String,List<Picture>> pictureMap = new HashMap<>();
-		for(int i = 0; i<3; i++) {
+		for(int i = 0; i<count; i++) {
 			//検索処理
 			List<Picture> pictureListByTopic = new ArrayList<>();
 			Picture condPic = new Picture();
@@ -82,6 +87,18 @@ public class PictureService {
 		List<Picture> pictureList = pictureDao.select(condPic);
 
 		return pictureList;
+	}
+
+	/**
+	 * objectUrlをキーとして削除処理を行う。
+	 * @param objectUrl
+	 * @throws Exception
+	 */
+	public void deletePicture(String objectUrl) throws Exception {
+		//削除処理
+		Picture condPic = new Picture();
+		condPic.setObjectUrl(objectUrl);
+		pictureDao.delete(condPic);
 	}
 
 }

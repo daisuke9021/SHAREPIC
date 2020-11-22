@@ -41,7 +41,7 @@
       <div id="pictureFrame">
       	<div th:each="picItem : ${pictureList}">
       		<form action="/Sharepic/Pictures/Picture" method="post">
-      			<input type="image" class="pictureItem" th:attr="src=@{${picItem.getObjectUrl()}}">
+      			<input type="image" class="pictureItem"  alt="画像ファイルが大きすぎるために表示できません。" th:attr="src=@{${picItem.getObjectUrl()}}">
       			<!-- 隠しフィールド -->
       			<input type="hidden" name="topic" th:attr="value=@{${picItem.getTopic()}}">
       			<input type="hidden" name="caption" th:attr="value=@{${picItem.getCaption()}}">

@@ -36,16 +36,37 @@
 
     <div id="main">
 
-      <p><img id="picture" th:attr="src=@{${picture.getObjectUrl()}}"></p>
+      <p><img id="picture" alt="画像ファイルが大きすぎるために表示できません。" th:attr="src=@{${picture.getObjectUrl()}}"></p>
       <p>テーマ</p>
       <p th:text="${picture.getTopic()}" class="frame"></p>
       <p>説明</p>
       <p th:text="${picture.getCaption()}" class="frame"></p>
       <p>投稿者</p>
       <p th:text="${picture.getPoster()}" class="frame"></p>
-
-
+      <form name="deleteForm" id="deleteForm" method="post" action="/Sharepic/Pictures/DeleteConfirm">
+      	<p><button id="deleteBtn" type="button">削除する</button></p>
+	  	<input type="hidden" id="sessionUser" name="sessionUser" th:attr="value=@{${sessionUser}}" />
+	  	<input type="hidden" id="poster" name="poster" th:attr="value=@{${picture.getPoster()}}" />
+      	<input type="hidden" id="deleteTarget" name="objectUrl" th:attr="value=@{${picture.getObjectUrl()}}" />
+	  </form>
     </div>
   </body>
+
+  <script>
+
+    //ログインユーザーと投稿者が同じ場合に「写真を削除する」ボタンを表示させる
+	const deletemBtn = document.getElementById("deleteBtn");
+    deletemBtn.addEventListener("click", function(event){
+		event.preventDefault();
+		//投稿者＝ログインユーザーでない場合、処理を中断する
+		if(document.getElementById('sessionUser').value == document.getElementById('poster').value) {
+			//削除画面に遷移する
+			document.deleteForm.submit();
+		} else {
+			alert("投稿者にのみ削除が許可されています。");
+		}
+	});
+
+  </script>
 
 </html>

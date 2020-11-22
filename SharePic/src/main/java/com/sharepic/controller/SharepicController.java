@@ -155,6 +155,7 @@ public class SharepicController {
 		picture.setTopic(topic);
 		picture.setCaption(caption);
 
+		model.addAttribute("sessionUser", sessionUser);
 		model.addAttribute("picture", picture);
 
 		return "picture";
@@ -226,6 +227,45 @@ public class SharepicController {
 		}
 
 		return "uploadSuccess";
+	}
+
+	@RequestMapping("/Pictures/DeleteConfirm")
+	public String deleteConfirm(Model model,
+						 @CookieValue(value="sessionStatus", required=false) String sessionStatus,
+						 @CookieValue(value="sessionUser", required=false) String sessionUser,
+						 @RequestParam("objectUrl") String objectUrl) {
+		//セッションがなければログイン画面へ遷移
+		if(!checkSessionStatus(sessionStatus,sessionUser)) {
+			return "login";
+		}
+
+		model.addAttribute("objectUrl", objectUrl);
+		return "deleteConfirm";
+	}
+
+	@RequestMapping("/Pictures/Delete")
+	public String delete(Model model,
+						 @CookieValue(value="sessionStatus", required=false) String sessionStatus,
+						 @CookieValue(value="sessionUser", required=false) String sessionUser,
+						 @RequestParam("objectUrl") String objectUrl) {
+
+		//セッションがなければログイン画面へ遷移
+		if(!checkSessionStatus(sessionStatus,sessionUser)) {
+			return "login";
+		}
+
+		//削除処理
+		System.out.println("削除処理を開始します。");
+		try {
+			pictureService.deletePicture(objectUrl);
+			System.out.println("削除処理に成功しました！！");
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("削除処理に失敗しました。。。");
+			return "deleteFailed";
+		}
+
+		return "deleteSuccess";
 	}
 
 	@RequestMapping("/Users/top")

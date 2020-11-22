@@ -143,6 +143,38 @@ public class PictureDao {
 		return topicList;
 	}
 
+
+	/**
+	 * 削除処理
+	 * @param condPic
+	 * @return
+	 * @throws Exception
+	 */
+	public int delete(Picture condPic) throws Exception {
+
+		System.out.println("↓↓↓↓↓↓↓【開始】テーブル：PICTURE_STORE｜処理種別：DELETE↓↓↓↓↓↓↓");
+		//マッパー取得
+		SharepicPictureStoreMapper mapper = postgresqlSession.getMapper(SharepicPictureStoreMapper.class);
+
+		int result = 0;
+		try {
+			result = mapper.delete(condPic);
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("テーブル：PICTURE_STORE｜処理種別：DELETE｜削除処理に失敗しました。");
+		}
+
+		if(result == 0) {
+			System.out.println("削除に失敗しています....");
+		} else {
+			postgresqlSession.commit();
+			System.out.println("削除に成功しました！");
+		}
+
+		System.out.println("↑↑↑↑↑↑↑【終了】テーブル：PICTURE_STORE｜処理種別：DELETE↑↑↑↑↑↑↑");
+		return result;
+	}
+
 //	/**
 //	 *  トピックIDに埋め込むトピックシーケンスの取得
 //	 */

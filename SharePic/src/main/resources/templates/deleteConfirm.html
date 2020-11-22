@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8">
+    <title>写真削除確認ページ</title>
+    <link rel="stylesheet" href="https://xxsharepicxx.s3-ap-northeast-1.amazonaws.com/css/deleteConfirm.css">
+    <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@300&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Goldman:wght@700&display=swap" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  </head>
+
+  <body>
+
+    <div id="menuBox1">
+      <i id="cameraBtn" class="fas fa-camera-retro"></i>SHAREPIC<i id="cameraBtn" class="fas fa-camera-retro"></i>
+    </div>
+
+    <div id="menuBox2">
+      <div class="spacebox1">　</div>
+      <div id="menuBox2_sub1">
+        <a href="/Sharepic/Pictures/Home">HOME</a>
+      </div>
+      <div id="menuBox2_sub2">
+        <a href="/Sharepic/Pictures/Upload">SHAREPIC</a>
+      </div>
+      <div id="menuBox2_sub3">
+        <a href="/Sharepic/Pictures/Mypage">MYPAGE</a>
+      </div>
+      <div id="menuBox2_sub4">
+        <a href="/Sharepic/Users/logout">LOGOUT</a>
+      </div>
+      <div class="spacebox1"> </div>
+    </div>
+
+    <div id="main">
+
+      <p><img id="picture" th:attr="src=@{${objectUrl}}"></p>
+      <p>上記の写真を削除してもよろしいでしょうか？</p>
+      <form name="deleteForm" id="deleteForm" method="post" action="/Sharepic/Pictures/Delete">
+      	<p><button type="submit">削除する！</button></p>
+      	<input type="hidden" id="objectUrl" name="objectUrl" th:attr="value=@{${objectUrl}}" />
+	  </form>
+	  <form method="get" action="/Sharepic/Pictures/Home">
+	  	<p><button type="submit">やっぱり削除しない(ホーム画面へ戻る)</button></p>
+	  </form>
+    </div>
+  </body>
+
+</html>
