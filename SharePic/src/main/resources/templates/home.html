@@ -7,6 +7,8 @@
     <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@300&display=swap" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Goldman:wght@700&display=swap" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   </head>
@@ -20,13 +22,13 @@
     <div id="menuBox2">
       <div class="spacebox1">　</div>
       <div id="menuBox2_sub1">
-        <a href="/Sharepic/Pictures/Mypage">MYPAGE</a>
+        <a class="menuBtn" href="/Sharepic/Pictures/Mypage">MYPAGE</a>
       </div>
       <div id="menuBox2_sub2">
-        <a href="/Sharepic/Pictures/Upload">SHAREPIC</a>
+        <a class="menuBtn" href="/Sharepic/Pictures/Upload">SHAREPIC</a>
       </div>
       <div id="menuBox2_sub3">
-        <a href="/Sharepic/Users/logout">LOGOUT</a>
+        <a class="menuBtn" href="/Sharepic/Users/logout">LOGOUT</a>
       </div>
       <div class="spacebox1"> </div>
     </div>
@@ -35,36 +37,32 @@
 
       <div class="spacebox2">　</div>
       <div id="box1">
-        <p class="sectionTitle1">TOPIC LIST</p>
+        <p class="sectionTitle1">テーマ一覧</p>
         <div id="topicListBox">
-       		<!--LOOP START-->
-        	<form th:each="topicName : ${topicList}" method="post" action="/Sharepic/Pictures/Topic">
-        		<p class="topicChooseList">
-        			<input type="submit" value=" ">
-        			<span th:text="${topicName}"></span>
-        		</p>
-				<input type="hidden" name="topic" th:attr="value=@{${topicName}}">
-        	</form>
-        	<!--LOOP END-->
+           <!--LOOP START-->
+        	<p th:each="topicName : ${topicList}" class="topicChooseList" >
+        		<i class="fas fa-caret-square-right"></i><a class="topicBtn" th:href="@{/Sharepic/Pictures/Topic(topic=${topicName})}" th:text="${topicName}">2020年旅行</a>
+          	</p>
+          <!--LOOP END-->
         </div>
       </div>
       <div id="box2">
-        <p class="sectionTitle2">PICKUP PICTURES</p>
+        <p class="sectionTitle2">最近新しい写真が追加されたテーマ</p>
         <!--LOOP START-->
         <div th:each="pictureMap : ${pictureList}" class="pictureFrame">
           <div class="spacebox3">　</div>
           <div class="pictureMainBox">
             <p class="topicName">[[${pictureMap.key}]]</p>
-            	<div class="pictureSubBox">
-            		<form th:each="picItem : ${pictureMap.value}" action="/Sharepic/Pictures/Picture" method="post">
-              			<input type="image" class="pictureItem" th:attr="src=@{${picItem.getObjectUrl()}}">
-              			<!-- 隠しフィールド -->
+            <div class="pictureSubBox">
+            	<form th:each="picItem : ${pictureMap.value}" action="/Sharepic/Pictures/Picture" method="post">
+              	<input type="image" class="pictureItem" th:attr="src=@{${picItem.getObjectUrl()}}">
+              	<!-- 隠しフィールド -->
       					<input type="hidden" name="topic" th:attr="value=@{${picItem.getTopic()}}">
       					<input type="hidden" name="caption" th:attr="value=@{${picItem.getCaption()}}">
       					<input type="hidden" name="objectUrl" th:attr="value=@{${picItem.getObjectUrl()}}">
       					<input type="hidden" name="poster" th:attr="value=@{${picItem.getPoster()}}">
-					</form>
-              	</div>
+              </form>
+            </div>
           </div>
           <div class="spacebox4">　</div>
         </div>

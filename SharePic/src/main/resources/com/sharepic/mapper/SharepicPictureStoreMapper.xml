@@ -56,8 +56,9 @@
 	</select>
 
 	<select id="getTopicList" resultType="string">
-		select DISTINCT picture_store.　topic
+		select DISTINCT picture_store.　topic, picture_store.　updateDate
 		  from picture_store
+		  order by picture_store.　updateDate DESC
 	</select>
 
 </mapper>

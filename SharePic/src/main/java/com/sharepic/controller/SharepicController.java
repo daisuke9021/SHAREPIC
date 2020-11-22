@@ -60,7 +60,7 @@ public class SharepicController {
 
 		try {
 			pictureMap = pictureService.getHomePictures();
-			topicList = pictureDao.getTopicList();
+			topicList = pictureService.getFilteredTopicList();
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("写真が取得できませんでした");
@@ -71,6 +71,10 @@ public class SharepicController {
 			for(Picture picture : entry.getValue()) {
 				System.out.println(picture);
 			}
+ 		}
+
+		for(String topic : topicList) {
+			System.out.println("トピック名：" + topic);
  		}
 
 		model.addAttribute("topicList", topicList);
@@ -170,7 +174,7 @@ public class SharepicController {
 		List<String> topicList = new ArrayList<>();
 
 		try {
-			topicList = pictureDao.getTopicList();
+			topicList = pictureService.getFilteredTopicList();
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("写真が取得できませんでした");
@@ -236,7 +240,7 @@ public class SharepicController {
 
 			try {
 				pictureMap = pictureService.getHomePictures();
-				topicList = pictureDao.getTopicList();
+				topicList = pictureService.getFilteredTopicList();
 			} catch (Exception e) {
 				e.printStackTrace();
 				System.out.println("写真が取得できませんでした");

@@ -41,17 +41,17 @@
             <input id="targetFile" type="file" name="picture">
           </label>
         </p>
-        <p id="topicForm">TOPIC：<label><input id="newTopicFlg" class="checkbox" type="checkbox" value="on" onclick="connecttext(this.checked);">新しいトピックを作る</label>
+        <p id="topicForm"><label><input id="newTopicFlg" class="checkbox" type="checkbox" value="on" onclick="connecttext(this.checked);">新しいテーマを作る</label>
         <input id="newTopic" type="text" name="newTopic" disabled>
           　<br>OR　
-            <br>既存のトピックを使う
+            <br>テーマを選ぶ
           <select id="existedTopic" name="existedTopic">
             <option value="" selected></option>
             <option th:each="topic : ${topicList}" th:value="${topic}" th:text="${topic}"></option>
           </select>
         </p>
         <br>
-        <p id="captionForm">CAPTION：<input id="caption" type="text" name="caption" ></p>
+        <p id="captionForm">説明：<input id="caption" type="text" name="caption" ></p>
         <br>
         <p><button id="submitFormBtn" type="button"><i class="fas fa-paper-plane fa-5x"></i></button></p>
 
@@ -84,10 +84,10 @@
         alert("投稿する写真を選択してください。");
         return false;
       } else if (document.getElementById("topic").value.length < 1) {
-        alert("トピックを選択してください。");
+        alert("テーマを選択してください。");
         return false;
       } else if (document.getElementById("caption").value.length < 1) {
-        alert("キャプションを記入してください。");
+        alert("説明を記入してください。");
         return false;
       } else {
         document.uploadForm.submit();

@@ -37,11 +37,11 @@
     <div id="main">
 
       <p><img id="picture" th:attr="src=@{${picture.getObjectUrl()}}"></p>
-      <p>TOPIC</p>
+      <p>テーマ</p>
       <p th:text="${picture.getTopic()}" class="frame"></p>
-      <p>CAPTION</p>
+      <p>説明</p>
       <p th:text="${picture.getCaption()}" class="frame"></p>
-      <p>POSTER</p>
+      <p>投稿者</p>
       <p th:text="${picture.getPoster()}" class="frame"></p>
 
 

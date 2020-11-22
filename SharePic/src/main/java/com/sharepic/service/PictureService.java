@@ -2,10 +2,8 @@ package com.sharepic.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -20,32 +18,42 @@ public class PictureService {
 	PictureDao pictureDao;
 
 	/**
+	 * 重複する値のないトピックリストを生成する
+	 * @return
+	 * @throws Exception
+	 */
+	public List<String> getFilteredTopicList() throws Exception {
+		//トピック一覧取得
+		List<String> topicList = pictureDao.getTopicList();
+		//重複するもはを1つにまとめる
+		List<String> filteredTopicList = new ArrayList<>();
+		for (String topic : topicList) {
+			if(!filteredTopicList.contains(topic)) {
+				filteredTopicList.add(topic);
+			}
+		}
+		filteredTopicList.stream().forEach(e -> System.out.println(e));
+		return filteredTopicList;
+	}
+
+	/**
 	 * ホーム画面に表示する写真情報を取得する
 	 * @return pictureMap
 	 * @throws Exception
 	 */
 	public Map<String,List<Picture>> getHomePictures() throws Exception {
-		//トピック一覧取得
-		List<String> topicList = pictureDao.getTopicList();
-		//3つのトピック選定
-		Set<String> topicSet = new LinkedHashSet<>();
-		for (String topic : topicList) {
-			topicSet.add(topic);
-			if(topicSet.size() == 3) {
-				break;
-			}
-		}
-
+		//トピックリスト取得
+		List<String> topicList = getFilteredTopicList();
 		//トピックに紐つく写真取得
 		Map<String,List<Picture>> pictureMap = new HashMap<>();
-		for(String topic : topicSet) {
+		for(int i = 0; i<3; i++) {
 			//検索処理
 			List<Picture> pictureListByTopic = new ArrayList<>();
 			Picture condPic = new Picture();
-			condPic.setTopic(topic);
+			condPic.setTopic(topicList.get(i));
 			pictureListByTopic = pictureDao.select(condPic);
 			if(pictureListByTopic.size() > 0) {
-				pictureMap.put(topic, pictureListByTopic);
+				pictureMap.put(topicList.get(i), pictureListByTopic);
 			}
 		}
 
