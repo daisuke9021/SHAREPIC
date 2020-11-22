@@ -6,8 +6,8 @@
 <mapper namespace="com.sharepic.mapper.SharepicUserMapper">
 
 	<insert id="insert" parameterType="com.sharepic.user.User">
-		insert into sharepic_schema.sharepic_user values(
-		'userIdxxx' || nextval('sharepic_schema.user_id_sequence'),
+		insert into sharepic_user values(
+		'userIdxxx' || nextval('user_id_sequence'),
 		#{meta.username, jdbcType=VARCHAR},
 		#{meta.password, jdbcType=VARCHAR},
 		#{meta.insertTime, jdbcType=TIMESTAMP},
@@ -17,9 +17,11 @@
 
 	<select id="count" resultType="int">
 		select count(*)
-		  from sharepic_schema.sharepic_user
+		  from sharepic_user
 		 where sharepic_user.　user_name = #{cond.username, jdbcType=VARCHAR}
+		 <if test="cond.password != null">
 	 	   and sharepic_user.　password = #{cond.password, jdbcType=VARCHAR}
+	 	  </if>
 	</select>
 
 </mapper>
